@@ -19,7 +19,7 @@ def categories_split(df):
 
 
 def clean_data(df):
-    df = df.drop_duplicates(subset=['id'])
+    df = df.drop_duplicates().reset_index(drop=True)
     return categories_split(df)
 
 
