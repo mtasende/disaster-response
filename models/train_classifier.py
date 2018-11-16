@@ -1,24 +1,25 @@
 import sys
+from data.process_data import MESSAGES_TABLE
+from sklearn.model_selection import train_test_split
+from models.model import Model
+
+current_model = Model()  # Change this to use another model
 
 
 def load_data(database_filepath):
-    pass
-
-
-def tokenize(text):
-    pass
+    return current_model.load_data(database_filepath)
 
 
 def build_model():
-    pass
+    return current_model.build_model()
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
-    pass
+    current_model.evaluate_model(model, X_test, Y_test, category_names)
 
 
 def save_model(model, model_filepath):
-    pass
+    current_model.save_model(model, model_filepath)
 
 
 def main():
