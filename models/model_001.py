@@ -1,4 +1,4 @@
-from sklearn.base import BaseEstimator, ClassifierMixin
+from models.model import Model
 
 
 class Model001(Model):

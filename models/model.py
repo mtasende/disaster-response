@@ -1,8 +1,13 @@
 import pandas as pd
 from sqlalchemy import create_engine
+import re
 from data.process_data import MESSAGES_TABLE
 
+from nltk.corpus import stopwords
+from nltk.stem.wordnet import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
+from nltk.stem.porter import PorterStemmer
+from nltk import pos_tag
 from nltk.corpus import wordnet
 
 from sklearn.ensemble import RandomForestClassifier
@@ -14,7 +19,7 @@ from sklearn.externals import joblib
 
 class Model(object):
     """
-    Implements the most basic model.
+    Implements the model interface.
     It also serves as the base class for more complex models.
     """
 
@@ -27,19 +32,41 @@ class Model(object):
 
         return X, y, category_names
 
-    def tokenize(text):
+    def tokenize(self, text):
         """ Basic tokenization function. """
         # Case normalization
         temp_text = text.lower()
 
+        # Punctuation removal
+        temp_text = re.sub(r'[^a-zA-Z0-9]', ' ', temp_text)
+
         # Tokenize
         tokens = word_tokenize(temp_text)
+
+        # Stop Word Removal
+        stop_words = stopwords.words("english")
+        tokens = [word for word in tokens if word not in stop_words]
+
+        # Part-of-Speech Tagging
+        tokens = [(token[0], self.get_wordnet_pos(token[1])) for token in pos_tag(tokens)]
+
+        # Named Entity Recognition
+        # TODO: Add this to the pipeline. The punctuation is important to recognize the
+        # entities.
+
+        # Lemmatization
+        lemmatizer = WordNetLemmatizer()
+        tokens = [lemmatizer.lemmatize(*token) for token in tokens]
+
+        # Stemming
+        stemmer = PorterStemmer()
+        tokens = [stemmer.stem(word) for word in tokens]
 
         return tokens
 
     def build_model(self):
         pipeline = Pipeline([
-            ('vect', CountVectorizer(tokenizer=self.tokenize)),
+            ('vecfrom data.process_data import MESSAGES_TABLEt', CountVectorizer(tokenizer=self.tokenize)),
             ('tfidf', TfidfTransformer()),
             ('clf', MultiOutputClassifier(RandomForestClassifier()))
         ])
@@ -51,6 +78,7 @@ class Model(object):
     def save_model(self, model, model_filepath):
         joblib.dump(model, model_filepath)
 
+    @staticmethod
     def get_wordnet_pos(treebank_tag):
         """
         Transforms from Treebank tags to wordnet tags.

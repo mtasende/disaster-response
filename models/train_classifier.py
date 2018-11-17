@@ -1,5 +1,4 @@
 import sys
-from data.process_data import MESSAGES_TABLE
 from sklearn.model_selection import train_test_split
 from models.model import Model
 
