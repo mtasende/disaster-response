@@ -15,6 +15,8 @@ from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn.externals import joblib
+from sklearn.metrics import accuracy_score, precision_score, recall_score, \
+    f1_score
 
 
 class Model(object):
@@ -22,6 +24,9 @@ class Model(object):
     Implements the model interface.
     It also serves as the base class for more complex models.
     """
+
+    def __init__(self):
+        self.model = None
 
     def load_data(self, database_filepath):
         engine = create_engine('sqlite:///{}'.format(database_filepath))
@@ -66,14 +71,39 @@ class Model(object):
 
     def build_model(self):
         pipeline = Pipeline([
-            ('vecfrom data.process_data import MESSAGES_TABLEt', CountVectorizer(tokenizer=self.tokenize)),
+            ('vec', CountVectorizer(tokenizer=self.tokenize)),
             ('tfidf', TfidfTransformer()),
             ('clf', MultiOutputClassifier(RandomForestClassifier()))
         ])
+        self.model = pipeline
         return pipeline
 
+    def tune_params(self, X_train, Y_train):
+        return self.model  # No hyper-parameter tuning
+
     def evaluate_model(self, model, X_test, Y_test, category_names):
-        pass
+        y_pred = model.predict(X_test)
+
+        results = list()
+        for i in range(y_pred.shape[1]):
+            acc = accuracy_score(Y_test.values[:, i], y_pred[:, i])
+            prec = precision_score(Y_test.values[:, i], y_pred[:, i],
+                                   average='macro')
+            rec = recall_score(Y_test.values[:, i], y_pred[:, i],
+                               average='macro')
+            f1 = f1_score(Y_test.values[:, i], y_pred[:, i], average='macro')
+            results.append({'accuracy': acc,
+                            'precision': prec,
+                            'recall': rec,
+                            'f1': f1})
+        results_df = pd.DataFrame(results, index=category_names)
+        print('-' * 100)
+        print(results_df)
+        print('-' * 100)
+        print(results_df.describe())
+        print('-' * 100)
+        print('Main metric [f1-score]: {}'.format(results_df['f1'].mean()))
+        print('-' * 100)
 
     def save_model(self, model, model_filepath):
         joblib.dump(model, model_filepath)

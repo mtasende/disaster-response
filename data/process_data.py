@@ -25,7 +25,8 @@ def clean_data(df):
 
 def save_data(df, database_filename):
     engine = create_engine('sqlite:///{}'.format(database_filename))
-    df.to_sql(MESSAGES_TABLE, engine, index=False, if_exists='replace')
+    df.to_sql(MESSAGES_TABLE, engine, index=False, if_exists='replace',
+              chunksize=1000)
 
 
 def main():
