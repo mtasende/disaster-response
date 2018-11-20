@@ -2,7 +2,8 @@ from models.model import Model
 from sklearn.pipeline import Pipeline
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn.base import BaseEstimator, TransformerMixin
-from xgboost import XGBClassifier
+# from xgboost import XGBClassifier
+from sklearn.ensemble import RandomForestClassifier
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from gensim.models import KeyedVectors
@@ -42,7 +43,8 @@ class Model003(Model):
                 filepath=PRE_TRAINED_W2V_PATH,
                 tokenizer=self.tokenize
             )),
-            ('clf', MultiOutputClassifier(XGBClassifier(random_state=2018)))
+            ('clf', MultiOutputClassifier(RandomForestClassifier(
+                random_state=2018, n_jobs=-1), n_jobs=-1))
         ])
         self.model = pipeline
         return pipeline
