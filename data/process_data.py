@@ -7,23 +7,27 @@ MESSAGES_TABLE = 'messages'
 
 
 def load_data(messages_filepath, categories_filepath):
+    """ Get the messages and categories from CSV files. """
     messages = pd.read_csv(messages_filepath)
     categories = pd.read_csv(categories_filepath)
     return messages.merge(categories, on='id', how='left')
 
 
 def categories_split(df):
+    """ Separate the categories in their own columns. """
     ohe_categories = pd.DataFrame(df.categories.str.split(';').apply(
         lambda x: {e.split('-')[0]: int(e.split('-')[1]) for e in x}).tolist())
     return df.join(ohe_categories).drop('categories', axis=1)
 
 
 def clean_data(df):
+    """ Prepare the data for ML use. """
     df = df.drop_duplicates().reset_index(drop=True)
     return categories_split(df)
 
 
 def save_data(df, database_filename):
+    """ Save the data to a sqlite database. """
     engine = create_engine('sqlite:///{}'.format(database_filename))
     df.to_sql(MESSAGES_TABLE, engine, index=False, if_exists='replace',
               chunksize=1000)

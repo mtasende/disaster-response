@@ -29,6 +29,17 @@ class Model(object):
         self.model = None
 
     def load_data(self, database_filepath):
+        """
+        Get the data from the database.
+
+        Args:
+            database_filepath(str): The path of the sqlite database.
+
+        Returns:
+            X(pandas.DataFrame): The input messages to classify.
+            y(pandas.DataFrame): The desired output labels.
+            category_names(list(str)): The names of the labels' categories.
+        """
         engine = create_engine('sqlite:///{}'.format(database_filepath))
         df = pd.read_sql_table(MESSAGES_TABLE, engine)
         X = df.loc[:, 'message']
@@ -53,11 +64,8 @@ class Model(object):
         tokens = [word for word in tokens if word not in stop_words]
 
         # Part-of-Speech Tagging
-        tokens = [(token[0], self.get_wordnet_pos(token[1])) for token in pos_tag(tokens)]
-
-        # Named Entity Recognition
-        # TODO: Add this to the pipeline. The punctuation is important to recognize the
-        # entities.
+        tokens = [(token[0], self.get_wordnet_pos(token[1]))
+                  for token in pos_tag(tokens)]
 
         # Lemmatization
         lemmatizer = WordNetLemmatizer()
@@ -70,6 +78,7 @@ class Model(object):
         return tokens
 
     def build_model(self):
+        """ Build a pipeline to preprocess and classify text. """
         pipeline = Pipeline([
             ('vec', CountVectorizer(tokenizer=self.tokenize)),
             ('tfidf', TfidfTransformer()),
@@ -79,9 +88,17 @@ class Model(object):
         return pipeline
 
     def tune_params(self, X_train, Y_train):
+        """ Grid search for better parameters. Return the best model found. """
         return self.model  # No hyper-parameter tuning
 
     def evaluate_model(self, model, X_test, Y_test, category_names):
+        """
+        Print some evaluation metrics:
+            - Accuracy
+            - Precision
+            - Recall
+            - F1-score
+        """
         y_pred = model.predict(X_test)
 
         results = list()
@@ -106,6 +123,7 @@ class Model(object):
         print('-' * 100)
 
     def save_model(self, model, model_filepath):
+        """ Save the model to a pickle. """
         joblib.dump(model, model_filepath)
 
     @staticmethod

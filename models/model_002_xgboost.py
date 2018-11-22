@@ -13,6 +13,7 @@ class Model002(Model):
     """
 
     def build_model(self):
+        """ Build a pipeline to preprocess and classify text. """
         pipeline = Pipeline([
             ('vec', CountVectorizer(tokenizer=self.tokenize)),
             ('tfidf', TfidfTransformer()),

@@ -8,22 +8,27 @@ current_model = Model002()  # Change this to use another model
 
 
 def load_data(database_filepath):
+    """ Wrapper function. """
     return current_model.load_data(database_filepath)
 
 
 def build_model():
+    """ Wrapper function. """
     return current_model.build_model()
 
 
 def tune_params(model, X_train, Y_train):
+    """ Wrapper function. """
     return current_model.tune_params(X_train, Y_train)
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
+    """ Wrapper function. """
     current_model.evaluate_model(model, X_test, Y_test, category_names)
 
 
 def save_model(model, model_filepath):
+    """ Wrapper function. """
     current_model.save_model(model, model_filepath)
 
 

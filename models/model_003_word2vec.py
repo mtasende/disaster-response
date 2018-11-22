@@ -38,6 +38,7 @@ class Model003(Model):
         return tokens
 
     def build_model(self):
+        """ Build a pipeline to preprocess and classify text. """
         pipeline = Pipeline([
             ('word2vec', Word2VecTransformer(
                 filepath=PRE_TRAINED_W2V_PATH,
