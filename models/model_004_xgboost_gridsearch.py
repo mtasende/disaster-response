@@ -25,10 +25,9 @@ class Model004(Model):
     def tune_params(self, X_train, Y_train):
         """ Grid search for better parameters. Return the best model found. """
         parameters = {
-            'tfidf__smooth_idf': [True, False],
-            'clf__estimator__max_depth': [3, 6, 20],
+            'clf__estimator__max_depth': [3, 6],
             'clf__estimator__subsample': [0.5, 1.0]
         }
-        cv = GridSearchCV(self.model, parameters, n_jobs=-1)
+        cv = GridSearchCV(self.model, parameters, cv=3, n_jobs=-1)
         cv.fit(X_train, Y_train)
         return cv.best_estimator_

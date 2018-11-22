@@ -1,10 +1,10 @@
 import sys
 from sklearn.model_selection import train_test_split
 # from models.model import Model
-from models.model_002_xgboost import Model002
+from models.model_004_xgboost_gridsearch import Model004
 from time import time
 
-current_model = Model002()  # Change this to use another model
+current_model = Model004()  # Change this to use another model
 
 
 def load_data(database_filepath):
@@ -42,7 +42,8 @@ def main():
         print('Building model...')
         model = build_model()
 
-        print('Hyperparameter Tuning...')
+        print('Hyperparameter Tuning. This process can take about 30 ' +
+              'minutes or more...')
         tic = time()
         model = tune_params(model, X_train, Y_train)
         toc = time()
