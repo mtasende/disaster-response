@@ -33,6 +33,9 @@ When a disaster occurs many messages are sent through different channels (e.g.: 
 ## How to interact with the project
 After the installation is complete, run the `run.sh` script. A server will be listening in http://127.0.0.1:5000. Use a browser to access to that address.
 
+**NOTE: Please don't execute `$python run.py` directly.
+You can execute `$python disaster_app.py` if you want.**
+
 ## Licensing, Authors, Acknowledgements, etc.
 Code released under the [MIT](https://github.com/mtasende/airbnb-analysis/blob/master/LICENSE) license.
 
