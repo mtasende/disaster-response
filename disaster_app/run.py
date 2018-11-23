@@ -15,13 +15,16 @@ from sqlalchemy import create_engine
 import data_utils_mt.utils as utils
 from models.model import Model
 
-DATABASE_PATH = '../data/DisasterResponse.db'
+from os.path import dirname, join, abspath
+
+from disaster_app import app
+
+ROOT_DIR = dirname(dirname(abspath(__file__)))
+print(ROOT_DIR)
+DATABASE_PATH = join(ROOT_DIR, 'data', 'DisasterResponse.db')
 TABLE_NAME = 'messages'
-MODEL_FILEPATH = '../models/classifier.pkl'
+MODEL_FILEPATH = join(ROOT_DIR, 'models', 'classifier.pkl')
 N_SAMPLES = 1000
-
-
-app = Flask(__name__)
 
 
 def tokenize(text):
@@ -170,7 +173,6 @@ def index():
     graphs = [graph1, graph2, graph3, graph4]
     # encode plotly graphs in JSON
     ids = ["graph-{}".format(i) for i, _ in enumerate(graphs)]
-    print(ids)
     graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
 
     # render web page with plotly graphs

@@ -42,8 +42,10 @@ def main():
         print('Building model...')
         model = build_model()
 
-        print('Hyperparameter Tuning. This process can take about 30 ' +
-              'minutes or more...')
+        print('Hyperparameter Tuning.')
+        print('-'*120)
+        print('WARNING: THIS PROCESS TAKES ABOUT 1 HOUR OR EVEN MORE...')
+        print('-' * 120)
         tic = time()
         model = tune_params(model, X_train, Y_train)
         toc = time()
