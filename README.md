@@ -17,9 +17,11 @@ When a disaster occurs many messages are sent through different channels (e.g.: 
 ```
 ├── LICENSE
 ├── README.md
-├── app                     <- Web app main dir
+├── disaster_app            <- Web app main dir
 │   └── templates           <- HTML templates for the web app
 ├── data                    <- Data and data wrangling scripts
+├── deploy.sh               <- Script to deploy the app to Heroku
+├── disaster_app.py         <- Main script for the web app
 ├── install.sh              <- Installation script
 ├── models                  <- ML models and training scripts
 ├── notebooks               <- Exploratory notebooks
